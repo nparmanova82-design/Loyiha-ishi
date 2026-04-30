@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="form-container">
+    <h2>Foydalanuvchini yangilash</h2>
+
+    <form method="post" enctype="multipart/form-data" class="form-box">
+        {% csrf_token %}
+
+        <label>Ism:</label>
+        <input type="text" name="name" value="{{ user.ism }}" required>
+
+        <label>Familiya:</label>
+        <input type="text" name="surname" value="{{ user.familiya }}" required>
+
+        <label>Yosh:</label>
+        <input type="number" name="age" value="{{ user.age }}" required>
+
+        <label>Bio:</label>
+        <textarea name="bio">{{ user.bio }}</textarea>
+
+        {% if user.image %}
+            <div class="image-box">
+                <p>Hozirgi rasm:</p>
+                <img src="{{ user.image.url }}" alt="">
+            </div>
+        {% endif %}
+
+        <label>Yangi rasm:</label>
+        <input type="file" name="image">
+
+        <button type="submit" class="btn">Saqlash</button>
+    </form>
+</div>
+
+{% endblock %}

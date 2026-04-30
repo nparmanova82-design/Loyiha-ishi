@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="delete-container">
+    <div class="delete-box">
+        
+        <h2>⚠️ O chirishni tasdiqlang</h2>
+
+        <p>
+            <strong>{{ user.ism }} {{ user.familiya }}</strong> ni ochirmoqchimisiz?
+        </p>
+
+        {% if user.image %}
+            <img src="{{ user.image.url }}" alt="">
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="btn-group">
+                <button type="submit" class="btn-delete">Ha, ochirish</button>
+                <a href="{% url 'user_view' user.slug %}" class="btn-cancel">Bekor qilish</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
