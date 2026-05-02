@@ -1,60 +1,59 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import DetailView, ListView
+from .models import Student
+from .forms import StudentForm
 
 
-from django.shortcuts import render,redirect,get_object_or_404
-from . import models
+#listview
+class UserListView(ListView):
+    model = Student
+    template_name = 'app/index.html'
+    context_object_name = 'users'
 
-# Create your views here.
 
-def mma(request):
-    user = models.Student.objects.all()
-    return render(request, 'app/index.html',context={'user':user})
+#userdetail
+class UserDetailView(DetailView):
+    model = Student
+    template_name = 'app/user_detail.html'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
 
-def user_view(request,slug):
-    user = models.Student.objects.get(slug=slug)
-    return render(request, 'app/user_view.html', {'user': user})
-#create
+
 
 def user_create(request):
-    if request.POST:
-        name=request.POST.get('name')
-        surename=request.POST.get('surname')
-        age=request.POST.get('age')
-        picture=request.FILES.get('picture')
+    form = StudentForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        user = form.save()
+        return redirect('user_detail', slug=user.slug)
+
+    return render(request, 'app/user_create.html', {'form': form})
 
 
-        models.Student.objects.create(
-    name=name,
-    surname=surename,
-    age=age,
-    picture=picture,
-)
-        return redirect('users_list')
-    return render(request,'app/user_create.html')
-
-#update
 def user_update(request, slug):
-    user = get_object_or_404(models.User, slug=slug)
+    user = get_object_or_404(Student, slug=slug)
 
     if request.method == "POST":
-        user.ism = request.POST.get("name")
-        user.familiya = request.POST.get("surname")
+        user.name = request.POST.get("name")
+        user.surname = request.POST.get("surname")
+        user.age = request.POST.get("age")
+        user.email = request.POST.get("email")
 
-        yosh = request.POST.get("yosh")
-        if yosh and yosh.isdigit():
-            user.yosh = int(yosh)
-            return redirect('users_list')
-        return render(request, 'user_update.html',{'user':user})        
+        if request.FILES.get('picture'):
+            user.picture = request.FILES.get('picture')
 
-
-    if request.FILES.get('image'):
-        user.picture = request.FILES.get('image')
         user.save()
-        return redirect(f'/user/{user.slug}')
-    #delete
-    from django.shortcuts import get_object_or_404, redirect
-    from . import models
+        return redirect('user_detail', slug=user.slug)
 
-def user_delete(request, slug):
-    user = get_object_or_404(models.User, slug=slug)
-    user.delete()
-    return redirect()
+    return render(request, 'app/user_update.html', {'user': user})
+
+
+
+def user_delete(request, id):
+    user = get_object_or_404(Student, id=id)
+
+    if request.method == "POST":
+        user.delete()
+        return redirect('users_list')
+
+    return render(request, 'app/user_delete.html', {'user': user})

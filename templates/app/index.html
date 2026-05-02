@@ -1,146 +1,37 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-{% include 'app/navbar.html' %}
 
-<style>
-    body {
-        background: #f4f6f9;
-    }
+<div class="d-flex justify-content-between mb-3">
+    <h3>Users</h3>
+    <a href="{% url 'user_create' %}" class="btn btn-primary">+ Add</a>
+</div>
 
-    .wrapper {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 20px;
-    }
+<div class="row">
+{% for user in users %}
+    <div class="col-md-4">
+        <div class="card mb-3 shadow">
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
+            {% if user.picture %}
+            <img src="{{ user.picture.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
+            {% endif %}
 
-    .header h2 {
-        font-weight: 700;
-        color: #333;
-    }
+            <div class="card-body">
+                <h5>{{ user.name }}</h5>
+                <p>{{ user.email }}</p>
 
-    .add-btn {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: 0.3s;
-    }
+                <a href="{% url 'user_detail' user.slug %}" class="btn btn-info btn-sm">View</a>
+                <a href="{% url 'user_update' user.slug %}" class="btn btn-warning btn-sm">Edit</a>
 
-    .add-btn:hover {
-        opacity: 0.9;
-    }
+                <form action="{% url 'user_delete' user.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </div>
 
-    .user-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .user-item {
-        background: white;
-        padding: 15px 18px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        transition: 0.25s;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    }
-
-    .user-item:hover {
-        transform: scale(1.02);
-    }
-
-    .left {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .avatar {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #43cea2, #185a9d);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-    }
-
-    .name {
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-    }
-
-    .view-btn {
-        text-decoration: none;
-        color: white;
-        background: #333;
-        padding: 6px 14px;
-        border-radius: 8px;
-        font-size: 14px;
-        transition: 0.3s;
-    }
-
-    .view-btn:hover {
-        background: #555;
-    }
-
-    .empty {
-        text-align: center;
-        color: gray;
-        margin-top: 50px;
-    }
-</style>
-
-<div class="wrapper">
-
-    <div class="header">
-        <h2>👥 Users</h2>
-        <a href="{% url 'user_create' %}" class="add-btn">+ Add</a>
+        </div>
     </div>
-
-    {% if users %}
-        <div class="user-list">
-            {% for user in users %}
-                <div class="user-item">
-
-                    <div class="left">
-                        <div class="avatar">
-                            {{ user.name|first }}{{ user.surename|first }}
-                        </div>
-
-                        <div class="name">
-                            {{ user.name }} {{ user.surename }}
-                        </div>
-                    </div>
-
-                    <a href="{% url 'user_view' user.slug %}" class="view-btn">
-                        View
-                    </a>
-
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="empty">
-            Hozircha hech kim yoq 😶
-        </div>
-    {% endif %}
-
+{% endfor %}
 </div>
 
 {% endblock %}

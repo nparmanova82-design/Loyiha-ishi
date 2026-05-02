@@ -1,29 +1,15 @@
 {% extends 'app/base.html' %}
-{% load static %}
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<div class="card p-4 shadow">
+    <h3>Create User</h3>
 
-<div class="form-container">
-    <h2>Yangi foydalanuvchi qo‘shish</h2>
-
-    <form method="post" enctype="multipart/form-data" class="form-box">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{ form.as_p }}
 
-        <label>Ism:</label>
-        <input type="text" name="name" placeholder="Ismingizni kiriting" required>
-
-        <label>Familiya:</label>
-        <input type="text" name="surname" placeholder="Familiyangizni kiriting" required>
-
-        <label>Yosh:</label>
-        <input type="number" name="age" placeholder="Yoshingiz" required>
-
-        <label>Rasm:</label>
-        <input type="file" name="picture">
-
-        <button type="submit" class="btn">Saqlash</button>
+        <button class="btn btn-success">Save</button>
     </form>
 </div>
 

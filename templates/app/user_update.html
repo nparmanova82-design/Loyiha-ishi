@@ -1,39 +1,20 @@
 {% extends 'app/base.html' %}
-{% load static %}
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<div class="card p-4 shadow">
+    <h3>Update User</h3>
 
-<div class="form-container">
-    <h2>Foydalanuvchini yangilash</h2>
-
-    <form method="post" enctype="multipart/form-data" class="form-box">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <label>Ism:</label>
-        <input type="text" name="name" value="{{ user.ism }}" required>
+        <input class="form-control mb-2" name="name" value="{{ user.name }}">
+        <input class="form-control mb-2" name="surname" value="{{ user.surname }}">
+        <input class="form-control mb-2" name="age" value="{{ user.age }}">
+        <input class="form-control mb-2" name="email" value="{{ user.email }}">
+        <input class="form-control mb-2" type="file" name="picture">
 
-        <label>Familiya:</label>
-        <input type="text" name="surname" value="{{ user.familiya }}" required>
-
-        <label>Yosh:</label>
-        <input type="number" name="age" value="{{ user.age }}" required>
-
-        <label>Bio:</label>
-        <textarea name="bio">{{ user.bio }}</textarea>
-
-        {% if user.image %}
-            <div class="image-box">
-                <p>Hozirgi rasm:</p>
-                <img src="{{ user.image.url }}" alt="">
-            </div>
-        {% endif %}
-
-        <label>Yangi rasm:</label>
-        <input type="file" name="image">
-
-        <button type="submit" class="btn">Saqlash</button>
+        <button class="btn btn-warning">Update</button>
     </form>
 </div>
 
